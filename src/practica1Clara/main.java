@@ -6,8 +6,12 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class main {
@@ -18,38 +22,102 @@ public class main {
 		practica1.mkdir();
 //		ejercicioUno();
 //		ejercicioDos();
-		boolean b = ejercicioTres(new File(practica1 , "poblaciones.dat") , new File(practica1 , "poblaciones.dat"));
-		System.out.println(true);
+		boolean b = ejercicioTres(new File(practica1 , "datos.dat") , new File(practica1 , "datos.dat"));
+		System.out.println(b);
+//		ejercicioCuatro();
+//		ejercicioCinco();
+		ejercicioCuatroB();
+		ejercicioCincoB();
 		
 	}
+	
+	private static void ejercicioCuatroB() throws IOException{
+		File f = new File(practica1 , "ejercicio4.txt");
+		FileOutputStream fO = new FileOutputStream(f);
+		DataOutputStream dO = new DataOutputStream(fO);
+		Scanner sc = new Scanner(System.in);
+		int num1=1;
+		while(num1!=0) {
+			System.out.println("Introduzca dos numeros");
+			num1 = sc.nextInt();
+			if(num1==0)break;
+			dO.writeInt(num1);
+			dO.writeUTF(" ");
+			int num2 = sc.nextInt();
+			dO.writeInt(num2);
+		}
+		dO.close();
+		System.out.println("Ha finalizado la insercion");
+	}
+	private static void ejercicioCincoB() throws IOException{
+		File f = new File(practica1 , "ejercicio4.txt");
+		FileInputStream fI = new FileInputStream(f);
+		DataInputStream dI = new DataInputStream(fI);
+		
+	}
+	private static void ejercicioCinco() throws IOException {
+		File f = new File(practica1 , "ejercicio4.txt");
+		FileReader fr = new FileReader(f);
+		String text = new String(Files.readAllBytes(Paths.get(f.getPath())));
+		String[] splitLinea = text.split("\n");
+		String[][] splitNumero = new String[splitLinea.length][2];
+		int contador =0;
+		for (String line : splitLinea) {
+			String [] aux = line.split(" ");
+			System.out.println(aux[0]);
+			System.out.println(aux[1]);
+			splitNumero[contador][0]= aux[0];
+			splitNumero[contador][1]= aux[1];
+			contador++;
+		}
+		for (String[] strings : splitNumero) {
+			System.out.println(strings[0]+"+"+strings[1]+"="+(Integer.valueOf(strings[0])+Integer.valueOf(strings[1])));
+		}
+	}
+	
+	private static void ejercicioCuatro() throws IOException {
+		File f = new File(practica1 , "ejercicio4.txt");
+		FileWriter fw = new FileWriter(f);
+		Scanner sc = new Scanner(System.in);
+		int num1=1;
+		while(num1!=0) {
+			System.out.println("Introduzca dos numeros");
+			num1 = sc.nextInt();
+			if(num1==0)break;
+			int num2 = sc.nextInt();
+			fw.write(num1 + " " + num2 + "\n");
+		}
+		fw.close();
+		System.out.println("Ha finalizado la insercion");
+	}
+	
 	private static boolean ejercicioTres(File f1 , File f2) throws IOException {
-		boolean result;
+		boolean result = false;
 		FileInputStream fileIn1 = new FileInputStream(f1);
-		DataInputStream dataIn1 = new DataInputStream(fileIn1);
 		FileInputStream fileIn2 = new FileInputStream(f2);
-		DataInputStream dataIn2 = new DataInputStream(fileIn2);
-		System.out.println(Files.size(f1.toPath()));
+		int in = 0;
 		if(Files.size(f1.toPath()) == Files.size(f2.toPath())) {
-				for (int i = 0; i < Files.size(f1.toPath()); i++) {
-					if(dataIn1.equals(dataIn2)) {
-						result = true;
-					}
-					else {
-
-						result = false; 
-					}
+			while(fileIn1.read() != -1) {
+				if(fileIn1.read() == fileIn2.read()) {
+					in =fileIn1.read(); 
+					result = true;
 				}
+				else {
+					System.out.println("Distintas letras");
+					result = false;
+					break;
+				}
+			}
 		}
 		else {
 			System.out.println("Distinto tamaño");
 			result = false;
 		
 		}
-		dataIn1.close();
-		dataIn2.close();
+		fileIn1.close();
+		fileIn2.close();
 		return result;
 	}
-	@SuppressWarnings("unlikely-arg-type")
 	private static void ejercicioDos() throws IOException {
 		File f = new File(practica1 , "poblaciones.dat");
 		FileOutputStream fileOut=new FileOutputStream(f , true);
