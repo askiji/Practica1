@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -19,15 +20,107 @@ public class main {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		practica1.mkdir();
+//		practica1.mkdir();
 //		ejercicioUno();
 //		ejercicioDos();
-		boolean b = ejercicioTres(new File(practica1 , "datos.dat") , new File(practica1 , "datos.dat"));
-		System.out.println(b);
+//		boolean b = ejercicioTres(new File(practica1 , "datos.dat") , new File(practica1 , "datos.dat"));
+//		System.out.println(b);
+		File f = new File(practica1 , "ejercicio4.txt");
 //		ejercicioCuatro();
 //		ejercicioCinco();
-		ejercicioCuatroB();
-		ejercicioCincoB();
+//		ejercicioCuatroB();
+//		ejercicioCincoB();
+//		ejercicioSeis(f);
+		ejercicioSiete();
+		
+	}
+	
+	private static void ejercicioSiete() throws IOException {
+		File f = new File(practica1 , "ejercicio7.txt");
+//		crearFichero(f);
+		mostrarEjercicioSiete(f);
+		
+		
+		
+		
+	}
+
+	private static void mostrarEjercicioSiete(File f) throws FileNotFoundException, IOException  {
+		FileInputStream fI = new FileInputStream(f);
+		DataInputStream dI = new DataInputStream(fI);
+		try {
+			for (;;) {
+				String aux1 = dI.readUTF();
+				String aux2 = dI.readUTF();
+				String aux3 = dI.readUTF();
+				double aux4 = dI.readDouble();
+				String aux5 = dI.readUTF();
+				if(aux5.equalsIgnoreCase("Entregado")) {
+					System.out.println("Nomrbe del cliete : " + aux1);
+					System.out.println("Email : " + aux2);
+					System.out.println("Codigo del pedido : " + aux3);
+					System.out.println("Importe del pedido : " + aux4);
+					System.out.println("Estado del pedido : " + aux5);
+				}
+			}
+		} catch (EOFException e) {
+			// TODO Auto-generated catch block
+			dI.close();
+		}
+		System.out.println("test skip");
+	}
+
+	private static void crearFichero(File f) throws FileNotFoundException, IOException {
+		FileOutputStream fO = new FileOutputStream(f , true);
+		DataOutputStream dO = new DataOutputStream(fO);
+		String nombre="";
+		String mail= "";
+		String codigo="";
+		double importe=0;
+		String estado="";
+		Scanner sc = new Scanner(System.in);
+		while(!nombre.equals("Exit")) {
+			System.out.println("Introduzca nombre");
+			nombre = sc.next();
+			if(nombre.equals("Exit")) break;
+			dO.writeUTF(nombre);
+			System.out.println("Introduzca email");
+			mail = sc.next();
+			dO.writeUTF(mail);
+			System.out.println("Introduzca codigo de pedido");
+			codigo = sc.next();
+			dO.writeUTF(codigo);
+			System.out.println("Importe del pedido");
+			importe = Double.valueOf(sc.next()) ;
+			dO.writeDouble(importe);
+			System.out.println("Estado del pedido");
+			estado = sc.next();
+			dO.writeUTF(estado);
+		}
+		dO.flush();
+		dO.close();
+	}
+	
+	private static void ejercicioSeis(File f) throws IOException {
+		
+		FileInputStream fI = new FileInputStream(f);
+		DataInputStream dI = new DataInputStream(fI);
+		
+		int aux = Integer.MIN_VALUE;
+		try {
+			while(true) {
+				int aux1 =dI.readInt();
+				if (aux1>aux) aux=aux1;
+				dI.readUTF();
+				dI.readInt();
+				dI.readUTF();
+			}
+		} catch (EOFException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			System.out.println("El maximo es :"+ aux);
+			dI.close();
+		}
 		
 	}
 	
@@ -45,6 +138,7 @@ public class main {
 			dO.writeUTF(" ");
 			int num2 = sc.nextInt();
 			dO.writeInt(num2);
+			dO.writeUTF("\n");
 		}
 		dO.close();
 		System.out.println("Ha finalizado la insercion");
@@ -53,6 +147,20 @@ public class main {
 		File f = new File(practica1 , "ejercicio4.txt");
 		FileInputStream fI = new FileInputStream(f);
 		DataInputStream dI = new DataInputStream(fI);
+		try {
+			while(true) {
+				int aux1 =dI.readInt();
+				dI.readUTF();
+				int aux2 =dI.readInt();
+				dI.readUTF();
+				System.out.println(aux1 + " + " + aux2 +" = "+(aux1+aux2));
+			}
+		} catch (EOFException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			dI.close();
+		}
+		
 		
 	}
 	private static void ejercicioCinco() throws IOException {
