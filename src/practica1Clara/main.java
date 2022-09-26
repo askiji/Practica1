@@ -31,13 +31,18 @@ public class main {
 //		ejercicioCuatroB();
 //		ejercicioCincoB();
 //		ejercicioSeis(f);
-		ejercicioSiete();
+//		ejercicioSiete();
+		ejercicoOcho();
 		
 	}
 	
+	private static void ejercicoOcho() {
+		
+	}
+
 	private static void ejercicioSiete() throws IOException {
 		File f = new File(practica1 , "ejercicio7.txt");
-//		crearFichero(f);
+		crearFichero(f);
 		mostrarEjercicioSiete(f);
 		
 		
@@ -71,6 +76,7 @@ public class main {
 	}
 
 	private static void crearFichero(File f) throws FileNotFoundException, IOException {
+		// True para que podamos ir metiendo mas pedidos
 		FileOutputStream fO = new FileOutputStream(f , true);
 		DataOutputStream dO = new DataOutputStream(fO);
 		String nombre="";
