@@ -25,7 +25,7 @@ public class main {
 //		ejercicioDos();
 //		boolean b = ejercicioTres(new File(practica1 , "datos.dat") , new File(practica1 , "datos.dat"));
 //		System.out.println(b);
-		File f = new File(practica1 , "ejercicio4.txt");
+		File f = new File(practica1, "ejercicio4.txt");
 //		ejercicioCuatro();
 //		ejercicioCinco();
 //		ejercicioCuatroB();
@@ -33,24 +33,80 @@ public class main {
 //		ejercicioSeis(f);
 //		ejercicioSiete();
 		ejercicoOcho();
-		
+
 	}
-	
-	private static void ejercicoOcho() {
-		
+
+	private static void ejercicoOcho() throws IOException {
+		File f = new File(practica1, "ejercicio8.txt");
+		FileOutputStream fO = new FileOutputStream(f, true);
+		DataOutputStream dO = new DataOutputStream(fO);
+		int nia = -1;
+		;
+		String nombre = "";
+		double nota1 = 0;
+		double nota2 = 0;
+		double nota3 = 0;
+		Scanner sc = new Scanner(System.in);
+		do {
+			System.out.println("Introduzaca  NIA");
+			nia = Integer.valueOf(sc.next());
+			if (nia == 0)
+				break;
+			dO.writeInt(nia);
+			System.out.println("Introduzca nombre");
+			nombre = sc.next();
+			dO.writeUTF(nombre);
+			System.out.println("Introduzca Nota eva 1");
+			nota1 = Double.valueOf(sc.next());
+			dO.writeDouble(nota1);
+			System.out.println("Introduzca Nota eva 2");
+			nota2 = Double.valueOf(sc.next());
+			dO.writeDouble(nota2);
+			System.out.println("Introduzca Nota eva 3");
+			nota3 = Double.valueOf(sc.next());
+			dO.writeDouble(nota3);
+		} while (nia != 0);
+		dO.close();
+		int opcion = 0;
+		System.out.println("1.- Mostrar listado de estudiantes");
+		System.out.println("2.- Mostrar listado de estudiantes con media superior a 7");
+		FileInputStream fI = new FileInputStream(f);
+		DataInputStream dI = new DataInputStream(fI);
+		opcion = Integer.valueOf(sc.next());
+		try {
+			while (true) {
+				nia = dI.readInt();
+				nombre = dI.readUTF();
+				nota1 = dI.readDouble();
+				nota2 = dI.readDouble();
+				nota3 = dI.readDouble();
+				if (opcion == 1) {
+					System.out.println("NIA : " + nia);
+					System.out.println("Nombre : " + nombre);
+					System.out.println("Media : " + (nota1 + nota2 + nota3) / 3);
+				}
+				if (opcion == 2) {
+					if ((nota1 + nota2 + nota3) / 3 >= 7) {
+						System.out.println("NIA : " + nia);
+						System.out.println("Nombre : " + nombre);
+						System.out.println("Media : " + (nota1 + nota2 + nota3) / 3);
+					}
+				}
+			}
+		} catch (EOFException ex) {
+			dI.close();
+		}
+
 	}
 
 	private static void ejercicioSiete() throws IOException {
-		File f = new File(practica1 , "ejercicio7.txt");
+		File f = new File(practica1, "ejercicio7.txt");
 		crearFichero(f);
 		mostrarEjercicioSiete(f);
-		
-		
-		
-		
+
 	}
 
-	private static void mostrarEjercicioSiete(File f) throws FileNotFoundException, IOException  {
+	private static void mostrarEjercicioSiete(File f) throws FileNotFoundException, IOException {
 		FileInputStream fI = new FileInputStream(f);
 		DataInputStream dI = new DataInputStream(fI);
 		try {
@@ -60,7 +116,7 @@ public class main {
 				String aux3 = dI.readUTF();
 				double aux4 = dI.readDouble();
 				String aux5 = dI.readUTF();
-				if(aux5.equalsIgnoreCase("Entregado")) {
+				if (aux5.equalsIgnoreCase("Entregado")) {
 					System.out.println("Nomrbe del cliete : " + aux1);
 					System.out.println("Email : " + aux2);
 					System.out.println("Codigo del pedido : " + aux3);
@@ -77,18 +133,19 @@ public class main {
 
 	private static void crearFichero(File f) throws FileNotFoundException, IOException {
 		// True para que podamos ir metiendo mas pedidos
-		FileOutputStream fO = new FileOutputStream(f , true);
+		FileOutputStream fO = new FileOutputStream(f, true);
 		DataOutputStream dO = new DataOutputStream(fO);
-		String nombre="";
-		String mail= "";
-		String codigo="";
-		double importe=0;
-		String estado="";
+		String nombre = "";
+		String mail = "";
+		String codigo = "";
+		double importe = 0;
+		String estado = "";
 		Scanner sc = new Scanner(System.in);
-		while(!nombre.equals("Exit")) {
+		while (!nombre.equals("Exit")) {
 			System.out.println("Introduzca nombre");
 			nombre = sc.next();
-			if(nombre.equals("Exit")) break;
+			if (nombre.equals("Exit"))
+				break;
 			dO.writeUTF(nombre);
 			System.out.println("Introduzca email");
 			mail = sc.next();
@@ -97,7 +154,7 @@ public class main {
 			codigo = sc.next();
 			dO.writeUTF(codigo);
 			System.out.println("Importe del pedido");
-			importe = Double.valueOf(sc.next()) ;
+			importe = Double.valueOf(sc.next());
 			dO.writeDouble(importe);
 			System.out.println("Estado del pedido");
 			estado = sc.next();
@@ -106,40 +163,42 @@ public class main {
 		dO.flush();
 		dO.close();
 	}
-	
+
 	private static void ejercicioSeis(File f) throws IOException {
-		
+
 		FileInputStream fI = new FileInputStream(f);
 		DataInputStream dI = new DataInputStream(fI);
-		
+
 		int aux = Integer.MIN_VALUE;
 		try {
-			while(true) {
-				int aux1 =dI.readInt();
-				if (aux1>aux) aux=aux1;
+			while (true) {
+				int aux1 = dI.readInt();
+				if (aux1 > aux)
+					aux = aux1;
 				dI.readUTF();
 				dI.readInt();
 				dI.readUTF();
 			}
 		} catch (EOFException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("El maximo es :"+ aux);
+			// e.printStackTrace();
+			System.out.println("El maximo es :" + aux);
 			dI.close();
 		}
-		
+
 	}
-	
-	private static void ejercicioCuatroB() throws IOException{
-		File f = new File(practica1 , "ejercicio4.txt");
+
+	private static void ejercicioCuatroB() throws IOException {
+		File f = new File(practica1, "ejercicio4.txt");
 		FileOutputStream fO = new FileOutputStream(f);
 		DataOutputStream dO = new DataOutputStream(fO);
 		Scanner sc = new Scanner(System.in);
-		int num1=1;
-		while(num1!=0) {
+		int num1 = 1;
+		while (num1 != 0) {
 			System.out.println("Introduzca dos numeros");
 			num1 = sc.nextInt();
-			if(num1==0)break;
+			if (num1 == 0)
+				break;
 			dO.writeInt(num1);
 			dO.writeUTF(" ");
 			int num2 = sc.nextInt();
@@ -149,96 +208,98 @@ public class main {
 		dO.close();
 		System.out.println("Ha finalizado la insercion");
 	}
-	private static void ejercicioCincoB() throws IOException{
-		File f = new File(practica1 , "ejercicio4.txt");
+
+	private static void ejercicioCincoB() throws IOException {
+		File f = new File(practica1, "ejercicio4.txt");
 		FileInputStream fI = new FileInputStream(f);
 		DataInputStream dI = new DataInputStream(fI);
 		try {
-			while(true) {
-				int aux1 =dI.readInt();
+			while (true) {
+				int aux1 = dI.readInt();
 				dI.readUTF();
-				int aux2 =dI.readInt();
+				int aux2 = dI.readInt();
 				dI.readUTF();
-				System.out.println(aux1 + " + " + aux2 +" = "+(aux1+aux2));
+				System.out.println(aux1 + " + " + aux2 + " = " + (aux1 + aux2));
 			}
 		} catch (EOFException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			dI.close();
 		}
-		
-		
+
 	}
+
 	private static void ejercicioCinco() throws IOException {
-		File f = new File(practica1 , "ejercicio4.txt");
+		File f = new File(practica1, "ejercicio4.txt");
 		FileReader fr = new FileReader(f);
 		String text = new String(Files.readAllBytes(Paths.get(f.getPath())));
 		String[] splitLinea = text.split("\n");
 		String[][] splitNumero = new String[splitLinea.length][2];
-		int contador =0;
+		int contador = 0;
 		for (String line : splitLinea) {
-			String [] aux = line.split(" ");
+			String[] aux = line.split(" ");
 			System.out.println(aux[0]);
 			System.out.println(aux[1]);
-			splitNumero[contador][0]= aux[0];
-			splitNumero[contador][1]= aux[1];
+			splitNumero[contador][0] = aux[0];
+			splitNumero[contador][1] = aux[1];
 			contador++;
 		}
 		for (String[] strings : splitNumero) {
-			System.out.println(strings[0]+"+"+strings[1]+"="+(Integer.valueOf(strings[0])+Integer.valueOf(strings[1])));
+			System.out.println(
+					strings[0] + "+" + strings[1] + "=" + (Integer.valueOf(strings[0]) + Integer.valueOf(strings[1])));
 		}
 	}
-	
+
 	private static void ejercicioCuatro() throws IOException {
-		File f = new File(practica1 , "ejercicio4.txt");
+		File f = new File(practica1, "ejercicio4.txt");
 		FileWriter fw = new FileWriter(f);
 		Scanner sc = new Scanner(System.in);
-		int num1=1;
-		while(num1!=0) {
+		int num1 = 1;
+		while (num1 != 0) {
 			System.out.println("Introduzca dos numeros");
 			num1 = sc.nextInt();
-			if(num1==0)break;
+			if (num1 == 0)
+				break;
 			int num2 = sc.nextInt();
 			fw.write(num1 + " " + num2 + "\n");
 		}
 		fw.close();
 		System.out.println("Ha finalizado la insercion");
 	}
-	
-	private static boolean ejercicioTres(File f1 , File f2) throws IOException {
+
+	private static boolean ejercicioTres(File f1, File f2) throws IOException {
 		boolean result = false;
 		FileInputStream fileIn1 = new FileInputStream(f1);
 		FileInputStream fileIn2 = new FileInputStream(f2);
 		int in = 0;
-		if(Files.size(f1.toPath()) == Files.size(f2.toPath())) {
-			while(fileIn1.read() != -1) {
-				if(fileIn1.read() == fileIn2.read()) {
-					in =fileIn1.read(); 
+		if (Files.size(f1.toPath()) == Files.size(f2.toPath())) {
+			while (fileIn1.read() != -1) {
+				if (fileIn1.read() == fileIn2.read()) {
+					in = fileIn1.read();
 					result = true;
-				}
-				else {
+				} else {
 					System.out.println("Distintas letras");
 					result = false;
 					break;
 				}
 			}
-		}
-		else {
+		} else {
 			System.out.println("Distinto tamaño");
 			result = false;
-		
+
 		}
 		fileIn1.close();
 		fileIn2.close();
 		return result;
 	}
+
 	private static void ejercicioDos() throws IOException {
-		File f = new File(practica1 , "poblaciones.dat");
-		FileOutputStream fileOut=new FileOutputStream(f , true);
-		DataOutputStream dataOS=new DataOutputStream(fileOut);
+		File f = new File(practica1, "poblaciones.dat");
+		FileOutputStream fileOut = new FileOutputStream(f, true);
+		DataOutputStream dataOS = new DataOutputStream(fileOut);
 		Scanner sc = new Scanner(System.in);
 		int codigo;
-		int aux =2;
+		int aux = 2;
 		String str;
 		while (aux != 3) {
 			aux++;
@@ -262,23 +323,21 @@ public class main {
 				System.out.println(dataIn.readUTF());
 				System.out.print("Provincia : ");
 				System.out.println(dataIn.readUTF());
-				}
-		}
-		catch (EOFException ex) {
-		dataIn.close();
+			}
+		} catch (EOFException ex) {
+			dataIn.close();
 		}
 	}
-	
-	
-	protected static void ejercicioUno() throws IOException  {
-		File f = new File(practica1 , "datos.dat");
-		FileOutputStream fileOut=new FileOutputStream(f);
-		DataOutputStream dataOS=new DataOutputStream(fileOut);
-		String[] nombres= {"Juan","María","Jesús","Aitor","Andrés","Ainhoa","Laura"};
-		int[] edades= {15,25,40,36,5,42,10};
-		
+
+	protected static void ejercicioUno() throws IOException {
+		File f = new File(practica1, "datos.dat");
+		FileOutputStream fileOut = new FileOutputStream(f);
+		DataOutputStream dataOS = new DataOutputStream(fileOut);
+		String[] nombres = { "Juan", "María", "Jesús", "Aitor", "Andrés", "Ainhoa", "Laura" };
+		int[] edades = { 15, 25, 40, 36, 5, 42, 10 };
+
 		for (int i = 0; i < edades.length; i++) {
-			dataOS.writeUTF("Nombre: " + nombres[i]+ " edad: ");
+			dataOS.writeUTF("Nombre: " + nombres[i] + " edad: ");
 			dataOS.writeInt(edades[i]);
 		}
 		dataOS.close();
@@ -291,12 +350,11 @@ public class main {
 				System.out.print(dataIn.readUTF());
 //				System.out.print(" edad: ");
 				System.out.println(dataIn.readInt());
-				//porque sale el ultimo nombre
-				}
-		}
-		catch (EOFException ex) {
-		dataIn.close();
+				// porque sale el ultimo nombre
+			}
+		} catch (EOFException ex) {
+			dataIn.close();
 		}
 	}
-	
+
 }
