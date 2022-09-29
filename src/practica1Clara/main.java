@@ -10,20 +10,22 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class main {
 	static File practica1 = new File(".");
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException , ClassNotFoundException {
 		// TODO Auto-generated method stub
+		//Estan los ejercicios en el main asique solo tienes que descomentarlos.
 //		practica1.mkdir();
 //		ejercicioUno();
 //		ejercicioDos();
-//		boolean b = ejercicioTres(new File(practica1 , "datos.dat") , new File(practica1 , "datos.dat"));
+		boolean b = ejercicioTres(new File(practica1 , "datos.dat") , new File(practica1 , "datos.dat"));
 //		System.out.println(b);
 		File f = new File(practica1, "ejercicio4.txt");
 //		ejercicioCuatro();
@@ -32,10 +34,109 @@ public class main {
 //		ejercicioCincoB();
 //		ejercicioSeis(f);
 //		ejercicioSiete();
-		ejercicoOcho();
+//		ejercicoOcho();
+		File f7 = new File(practica1, "ejercicio7Objeto.txt");
+//		ejercicioSieteObjeto(f7);
+		File f8 = new File(practica1, "ejercicio8Objeto.txt");
+		ejercicioOchoObjeto(f8);
+
+	}
+	
+	private static void ejercicioOchoObjeto(File f) throws IOException , ClassNotFoundException {
+		FileOutputStream fs = new FileOutputStream(f);
+		ObjectOutputStream os = new ObjectOutputStream(fs);
+		Scanner sc = new Scanner(System.in);
+		int nia =0;
+		do {
+			System.out.println("Introduzca NIA");
+			nia = Integer.valueOf(sc.next());
+			if (nia == 0)break;
+			System.out.println("Introduzca nombre");
+			String nombre = sc.next();
+			System.out.println("Introdizca nota evaluacion 1");
+			double nota1 = Double.valueOf(sc.next());
+			System.out.println("Introdizca nota evaluacion 2");
+			double nota2 = Double.valueOf(sc.next());
+			System.out.println("Introdizca nota evaluacion 3");
+			double nota3 = Double.valueOf(sc.next());
+			Persona p = new Persona(nia, nombre, nota1, nota2, nota3);
+			os.writeObject(p);
+			
+		} while (nia != 0);
+		os.close();
+		int opcion = 0;
+		System.out.println("1.- Mostrar listado de estudiantes");
+		System.out.println("2.- Mostrar listado de estudiantes con media superior a 7");
+		FileInputStream fsI= new FileInputStream(f);
+		ObjectInputStream osI=new ObjectInputStream(fsI);
+		opcion = Integer.valueOf(sc.next());
+		try {
+			while (true) {
+				Persona p = (Persona) osI.readObject();
+				if (opcion == 1) {
+					System.out.println("NIA : " + p.getNia());
+					System.out.println("Nombre : " + p.getNombre());
+					System.out.println("Media : " + (p.getNota1() + p.getNota2() + p.getNota3()) / 3);
+				}
+				if (opcion == 2) {
+					if ((p.getNota1() + p.getNota2() + p.getNota3()) / 3 >= 7) {
+						System.out.println("NIA : " + p.getNia());
+						System.out.println("Nombre : " + p.getNombre());
+						System.out.println("Media : " + (p.getNota1() + p.getNota2() + p.getNota3()) / 3);
+					}
+				}
+			}
+		} catch (EOFException ex) {
+			os.close();
+		}
 
 	}
 
+	private static void ejercicioSieteObjeto(File f) throws IOException, ClassNotFoundException {
+		FileOutputStream fs = new FileOutputStream(f);
+		ObjectOutputStream os = new ObjectOutputStream(fs);
+		Scanner sc = new Scanner(System.in);
+		String nombre ="";
+		do {
+			System.out.println("Introduzca Nombre");
+			nombre = sc.next();
+			if(nombre.equalsIgnoreCase("Exit")) break;
+			System.out.println("Introduzca email");
+			String email = sc.next();
+			System.out.println("Introduzaca codigo de pedido");
+			int codigo = Integer.valueOf(sc.next());
+			System.out.println("Introuzca importe");
+			double importe = Double.valueOf(sc.next());
+			System.out.println("Introduzca estado");
+			String estado = sc.next();
+			os.writeObject(new Cliente(nombre, email, codigo, importe, estado));
+		} while (nombre.equals("Exit"));
+		
+		FileInputStream fsI= new FileInputStream(f);
+		ObjectInputStream osI=new ObjectInputStream(fsI);
+		try {
+			for (;;) {
+				Cliente c = (Cliente) osI.readObject();
+				String aux5 = c.getEstado();
+				if (aux5.equalsIgnoreCase("Entregado")) {
+					System.out.println("Nomrbe del cliete : " + c.getNombre());
+					System.out.println("Email : " + c.getEmail());
+					System.out.println("Codigo del pedido : " + c.getCodigo());
+					System.out.println("Importe del pedido : " + c.getImporte());
+					System.out.println("Estado del pedido : " + c.getEstado());
+				}
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch bloco
+			osI.close();
+		}
+
+//		os.close();
+//		
+	}
 	private static void ejercicoOcho() throws IOException {
 		File f = new File(practica1, "ejercicio8.txt");
 		FileOutputStream fO = new FileOutputStream(f, true);
@@ -125,10 +226,8 @@ public class main {
 				}
 			}
 		} catch (EOFException e) {
-			// TODO Auto-generated catch block
 			dI.close();
 		}
-		System.out.println("test skip");
 	}
 
 	private static void crearFichero(File f) throws FileNotFoundException, IOException {
